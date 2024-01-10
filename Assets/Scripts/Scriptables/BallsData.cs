@@ -9,27 +9,30 @@ namespace Scriptables
     public class BallData
     {
         public float Size;
-        public int Score;
         public Color Color;
+        public bool CanSpawn;
     }
     
     [CreateAssetMenu(menuName = "Data/BallsData")]
     public class BallsData : SerializedScriptableObject
     {
         [SerializeField] private BallData[] _balls;
-
+        [SerializeField] private int _scoreMultiplier = 2;
+        
         public BallData[] Balls => _balls;
+        public int ScoreMultiplier => _scoreMultiplier;
 
-        public BallData GetNextLevelBall(float Size)
+        public BallData GetNextLevelBall(float size)
         {
-            var currentBallData = _balls.ToList().Find(x => x.Size == Size);
+            var currentBallData = _balls.ToList().Find(x => x.Size == size);
             var nextLevelBallIndex = _balls.IndexOf(currentBallData) + 1;
-            Debug.Log($"nextLevelBallIndex: {nextLevelBallIndex}");
-            Debug.Log($"nextLevelBallIndex < _balls.Length - 1: {nextLevelBallIndex < _balls.Length}");
-            if (nextLevelBallIndex < _balls.Length)
-                return _balls[nextLevelBallIndex];
-            else
-                return null;
+            return nextLevelBallIndex < _balls.Length ? _balls[nextLevelBallIndex] : null;
+        }
+        
+        public BallData GetRandomBall()
+        {
+            var random = Random.Range(0, _balls.Count(x => x.CanSpawn));
+            return _balls[random];
         }
     }
 }

@@ -13,7 +13,7 @@ public class BallsMerger : MonoBehaviour
         {
             ball2.MergeReady -= MergeBalls;
             Destroy(ball2.gameObject);
-            ball1.Initialize(nextLevelBall.Size, nextLevelBall.Score, nextLevelBall.Color);
+            ball1.Initialize(nextLevelBall.Size, ball1.Score * _ballsData.ScoreMultiplier, nextLevelBall.Color);
         }
     }
 }

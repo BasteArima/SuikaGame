@@ -1,4 +1,5 @@
 using System.Collections;
+using ModestTree;
 using Scriptables;
 using TMPro;
 using UnityEngine;
@@ -47,17 +48,22 @@ public class BallSpawner : MonoBehaviour
 
     private void GenerateNewBalls()
     {
-        _currentBallData = null == _currentBallData ? _ballsData.Balls.GetRandomElement() : _nextBallData;
-        _nextBallData = _ballsData.Balls.GetRandomElement();
+        _currentBallData = null == _currentBallData ? _ballsData.GetRandomBall() : _nextBallData;
+        _nextBallData = _ballsData.GetRandomBall();
 
         _currentPhysicBall = Instantiate(_ballPrefab, _ballSpawnParent);
-        _currentPhysicBall.Initialize(_currentBallData.Size, _currentBallData.Score, _currentBallData.Color);
+        var ballScore = _ballsData.Balls.IndexOf(_currentBallData) * 2;
+        if (ballScore == 0)
+            ballScore = _ballsData.ScoreMultiplier;
+        _currentPhysicBall.Initialize(_currentBallData.Size, ballScore, _currentBallData.Color);
 
         _currentPhysicBall.MergeReady += _ballsMerger.MergeBalls;
         _currentPhysicBall.Rigidbody.isKinematic = true;
 
         _nextBallTipIcon.color = _nextBallData.Color;
-
-        _nextBallTipScore.text = _nextBallData.Score.ToString();
+        var nextBallScore = _ballsData.Balls.IndexOf(_nextBallData) * 2;
+        if (nextBallScore == 0)
+            nextBallScore = 2;
+        _nextBallTipScore.text = nextBallScore.ToString();
     }
 }

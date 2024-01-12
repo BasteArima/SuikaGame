@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -7,22 +8,23 @@ namespace Core.Scriptables
     [CreateAssetMenu(menuName = "Data/BallsDataPackContainer")]
     public class BallsDataPackContainer : SerializedScriptableObject
     {
-        [SerializeField] private BallsDataPack[] _ballsDataPacks;
+        [SerializeField] private Dictionary<BallsDataPack, bool> _ballsDataPacks;
 
-        public BallsDataPack[] BallsDataPacks => _ballsDataPacks;
+        public Dictionary<BallsDataPack, bool> BallsDataPacks => _ballsDataPacks;
 
         public void ActivePackWithId(string id)
         {
-            var pack = _ballsDataPacks.FirstOrDefault(pack => pack.Id == id);
-            if (null == pack)
-                return;
-            pack.ActivePack = true;
+            foreach (var pack in _ballsDataPacks.Keys)
+                _ballsDataPacks[pack] = false;
+            
+            var activePack = _ballsDataPacks.FirstOrDefault(x => x.Key.Id == id).Key;
+            _ballsDataPacks[activePack] = true;
         }
 
         public BallsDataPack GetActivePack()
         {
-            var pack = _ballsDataPacks.FirstOrDefault(pack => pack.ActivePack);
-            return pack;
+            var pack = _ballsDataPacks.FirstOrDefault(pack => pack.Value);
+            return pack.Key;
         }
     }
 }

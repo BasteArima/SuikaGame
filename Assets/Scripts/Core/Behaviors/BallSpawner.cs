@@ -1,6 +1,6 @@
-using System;
 using System.Collections;
 using Core.Scriptables;
+using Core.Types;
 using ModestTree;
 using TMPro;
 using UniRx;
@@ -20,8 +20,6 @@ namespace Core.Behaviors
         [SerializeField] private float _waitBeforeSpawnNewBalls;
 
         private PlayerMoveController _playerMoveController;
-        private BallsMerger _ballsMerger;
-
         private BallsDataPack _ballsDataPack;
         private BallData _currentBallData;
         private BallData _nextBallData;
@@ -31,11 +29,10 @@ namespace Core.Behaviors
         public PoolServices<PhysicBall> BallsPool { get; private set; }
 
         [Inject]
-        protected virtual void Construct(PlayerMoveController playerMoveController, BallsMerger ballsMerger,
+        protected virtual void Construct(PlayerMoveController playerMoveController,
             BallsDataPackContainer ballsDataPackContainer)
         {
             _playerMoveController = playerMoveController;
-            _ballsMerger = ballsMerger;
             _ballsDataPack = ballsDataPackContainer.GetActivePack();
 
             MessageBroker.Default
@@ -97,13 +94,9 @@ namespace Core.Behaviors
             _currentPhysicBall = BallsPool.Create(_ballPrefab);
             _currentPhysicBall.transform.parent = _ballSpawnParent;
             _currentPhysicBall.transform.localPosition = Vector3.zero;
-            var ballScore = _ballsDataPack.Balls.IndexOf(_currentBallData) * 2;
-            if (ballScore == 0)
-                ballScore = _ballsDataPack.ScoreMultiplier;
-            _currentPhysicBall.Initialize(_currentBallData.Size, ballScore, _currentBallData.Color,
-                _currentBallData.Sprite);
 
-            _currentPhysicBall.MergeReady += _ballsMerger.MergeBalls;
+            _currentPhysicBall.Initialize(_currentBallData);
+
             _currentPhysicBall.Rigidbody.isKinematic = true;
 
             _nextBallTipIcon.color = _nextBallData.Color;

@@ -21,7 +21,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  _id: 
+  _id: dota
   _balls:
   - Size: 0.3
     Sprite: {fileID: 21300000, guid: 96c01ab8ee1e08d4798661af5d5346e5, type: 3}
@@ -68,4 +68,4 @@ MonoBehaviour:
     Color: {r: 1, g: 1, b: 1, a: 1}
     CanSpawn: 0
   _scoreMultiplier: 2
-  <ActivePack>k__BackingField: 1
+  <ActivePack>k__BackingField: 0

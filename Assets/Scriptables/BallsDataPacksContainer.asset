@@ -15,12 +15,68 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 7cfe83475bd68e94881733aef0ee4f54, type: 2}
+    - {fileID: 11400000, guid: d3fdbe40e6efe8c4e88e959d6fed15c9, type: 2}
+    - {fileID: 11400000, guid: 19f458364df24d145863badc7da1cd10, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
-  _ballsDataPacks:
-  - {fileID: 11400000, guid: 7cfe83475bd68e94881733aef0ee4f54, type: 2}
-  - {fileID: 11400000, guid: d3fdbe40e6efe8c4e88e959d6fed15c9, type: 2}
+    SerializationNodes:
+    - Name: _ballsDataPacks
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[Core.Scriptables.BallsDataPack,
+        Assembly-CSharp],[System.Boolean, mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.ObjectEqualityComparer`1[[Core.Scriptables.BallsDataPack,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 10
+      Data: 0
+    - Name: $v
+      Entry: 5
+      Data: true
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 10
+      Data: 1
+    - Name: $v
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 10
+      Data: 2
+    - Name: $v
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 

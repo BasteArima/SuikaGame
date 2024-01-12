@@ -6,6 +6,7 @@
         MainMenuLoop = 1,
         CoreLoop = 2,
 
+        // Dota
         BaneBlink = 100,
         Basshunter = 101,
         ChWhFrog = 102,
@@ -18,6 +19,19 @@
         Silenced = 109,
         SunStrike = 110,
         TechiesMine = 11,
-        Midas = 112
+        Midas = 112,
+        
+        // Hololive
+        AquaMergeSfx = 200,
+        AyameMergeSfx = 201,
+        FubukiMergeSfx = 202,
+        GuraMergeSfx = 203,
+        HakosMergeSfx = 204,
+        KoboMergeSfx = 205,
+        KoyoriMergeSfx = 206,
+        MioMergeSfx = 207,
+        OllieMergeSfx = 208,
+        TowaMergeSfx = 209,
+        YagooMergeSfx = 210,
     }
 }

@@ -1,6 +1,9 @@
-using System;
+using Core.Signals;
+using Core.Types;
 using DG.Tweening;
+using Sound.Enums;
 using TMPro;
+using UniRx;
 using UnityEngine;
 
 namespace Core.Behaviors
@@ -8,8 +11,6 @@ namespace Core.Behaviors
     [RequireComponent(typeof(Rigidbody2D))]
     public class PhysicBall : MonoBehaviour
     {
-        public Action<PhysicBall, PhysicBall> MergeReady;
-
         [SerializeField] private SpriteRenderer _spriteRenderer;
         [SerializeField] private TMP_Text _scoreText;
 
@@ -29,31 +30,46 @@ namespace Core.Behaviors
 
         public Rigidbody2D Rigidbody { get; private set; }
 
-        public float Size { get; private set; }
+        public BallData BallData { get; private set; }
+        public SoundIds MergeSound { get; private set; }
 
         private void Awake()
         {
             Rigidbody = GetComponent<Rigidbody2D>();
         }
 
-        public void Initialize(float size, int score, Color color, Sprite sprite)
+        public void Initialize(BallData ballData)
         {
-            Size = size;
-            transform.DOScale(Size, 0);
-            Score = score;
-            _spriteRenderer.color = color;
-            if (null != sprite)
-                _spriteRenderer.sprite = sprite;
-
+            BallData = ballData;
+            transform.DOScale(ballData.Size, 0);
+            Score = ballData.Score;
+            _spriteRenderer.color = ballData.Color;
+            if (null != ballData.Sprite)
+                _spriteRenderer.sprite = ballData.Sprite;
+            MergeSound = ballData.MergeSound;
         }
 
-        private void OnCollisionEnter2D(Collision2D collision)
+        private void OnCollisionWithOtherPhysicBall(Collision2D collision)
         {
             if (collision.gameObject.TryGetComponent<PhysicBall>(out var ball))
             {
                 if (ball.Score == Score)
-                    MergeReady?.Invoke(this, ball);
+                    MessageBroker.Default.Publish(new MergeBallsSignal()
+                    {
+                        FirstBall = this,
+                        SecondBall = ball
+                    });
             }
+        }
+
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            OnCollisionWithOtherPhysicBall(collision);
+        }
+
+        private void OnCollisionStay2D(Collision2D collision)
+        {
+            OnCollisionWithOtherPhysicBall(collision);
         }
     }
 }

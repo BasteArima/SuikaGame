@@ -62,14 +62,24 @@ namespace Core.Behaviors
             }
         }
 
+        private void OnCollisionWithDeadline(Collision2D collision)
+        {
+            if (collision.gameObject.TryGetComponent<Deadline>(out var ball))
+            {
+                MessageBroker.Default.Publish(new DeadlineCrossSignal());
+            }
+        }
+
         private void OnCollisionEnter2D(Collision2D collision)
         {
             OnCollisionWithOtherPhysicBall(collision);
+            OnCollisionWithDeadline(collision);
         }
 
         private void OnCollisionStay2D(Collision2D collision)
         {
             OnCollisionWithOtherPhysicBall(collision);
+            OnCollisionWithDeadline(collision);
         }
     }
 }

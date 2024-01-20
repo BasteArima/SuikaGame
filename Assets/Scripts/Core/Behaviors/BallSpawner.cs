@@ -1,25 +1,26 @@
+using System;
 using System.Collections;
 using Core.Scriptables;
 using Core.Types;
-using ModestTree;
-using TMPro;
+using DG.Tweening;
 using UniRx;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
 
 namespace Core.Behaviors
 {
     public class BallSpawner : MonoBehaviour
     {
+        public event Action<BallData> NewCurrentBallGenerated;
+        public event Action<BallData> NewNextBallGenerated;
+        
         [SerializeField] private PhysicBall _ballPrefab;
         [SerializeField] private Transform _ballSpawnParent;
         [SerializeField] private Transform _droppedBallParent;
-        [SerializeField] private Image _nextBallTipIcon;
-        [SerializeField] private TMP_Text _nextBallTipScore;
         [SerializeField] private float _waitBeforeSpawnNewBalls;
+        [SerializeField] private SpriteRenderer _ballFallTip;
 
-        private PlayerMoveController _playerMoveController;
+        private PlayerBallDropController _playerBallDropController;
         private BallsDataPack _ballsDataPack;
         private BallData _currentBallData;
         private BallData _nextBallData;
@@ -29,10 +30,10 @@ namespace Core.Behaviors
         public PoolServices<PhysicBall> BallsPool { get; private set; }
 
         [Inject]
-        protected virtual void Construct(PlayerMoveController playerMoveController,
+        protected virtual void Construct(PlayerBallDropController playerBallDropController,
             BallsDataPackContainer ballsDataPackContainer)
         {
-            _playerMoveController = playerMoveController;
+            _playerBallDropController = playerBallDropController;
             _ballsDataPack = ballsDataPackContainer.GetActivePack();
 
             MessageBroker.Default
@@ -55,8 +56,11 @@ namespace Core.Behaviors
         {
             BallsPool = new PoolServices<PhysicBall>();
             _canCreateNewBall = true;
-            _playerMoveController.BallDropClicked += OnBallDropClicked;
-            GenerateNewBalls();
+            _playerBallDropController.BallDropClicked += OnBallDropClicked;
+            GenerateNewCurrentBall();
+            GenerateNewNextBall();
+            CreateNewPhysicBall();
+            _ballFallTip.DOFade(0.5f, _waitBeforeSpawnNewBalls / 3);
         }
 
         private void OnGameOver(GameOverSignal signal)
@@ -67,12 +71,13 @@ namespace Core.Behaviors
 
         private void OnDestroy()
         {
-            _playerMoveController.BallDropClicked -= OnBallDropClicked;
+            _playerBallDropController.BallDropClicked -= OnBallDropClicked;
         }
 
         private void OnBallDropClicked(Vector2 ballDropPosition)
         {
             if (!_canCreateNewBall) return;
+            _ballFallTip.DOFade(0.1f, _waitBeforeSpawnNewBalls / 3);
             _canCreateNewBall = false;
             _currentPhysicBall.transform.SetParent(_droppedBallParent);
             _currentPhysicBall.Rigidbody.isKinematic = false;
@@ -82,30 +87,33 @@ namespace Core.Behaviors
         private IEnumerator CreateNewBallsWithPause()
         {
             yield return new WaitForSeconds(_waitBeforeSpawnNewBalls);
-            GenerateNewBalls();
+            GenerateNewCurrentBall();
+            GenerateNewNextBall();
+            CreateNewPhysicBall();
+            _ballFallTip.DOFade(0.5f, _waitBeforeSpawnNewBalls / 3);
             _canCreateNewBall = true;
         }
 
-        private void GenerateNewBalls()
+        private void GenerateNewCurrentBall()
         {
             _currentBallData = null == _currentBallData ? _ballsDataPack.GetRandomBall() : _nextBallData;
-            _nextBallData = _ballsDataPack.GetRandomBall();
+            NewCurrentBallGenerated?.Invoke(_currentBallData);
+        }
 
+        private void CreateNewPhysicBall()
+        {
             _currentPhysicBall = BallsPool.Create(_ballPrefab);
             _currentPhysicBall.transform.parent = _ballSpawnParent;
             _currentPhysicBall.transform.localPosition = Vector3.zero;
 
             _currentPhysicBall.Initialize(_currentBallData);
-
             _currentPhysicBall.Rigidbody.isKinematic = true;
-
-            _nextBallTipIcon.color = _nextBallData.Color;
-            if (null != _nextBallData.Sprite)
-                _nextBallTipIcon.sprite = _nextBallData.Sprite;
-            var nextBallScore = _ballsDataPack.Balls.IndexOf(_nextBallData) * 2;
-            if (nextBallScore == 0)
-                nextBallScore = 2;
-            _nextBallTipScore.text = nextBallScore.ToString();
+        }
+        
+        public void GenerateNewNextBall()
+        {
+            _nextBallData = _ballsDataPack.GetRandomBall();
+            NewNextBallGenerated?.Invoke(_nextBallData);
         }
     }
 }

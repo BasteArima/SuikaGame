@@ -9,6 +9,7 @@ namespace Core
     {
         [SerializeField] private BallsDataPackContainer _ballsDataPackContainer;
         [SerializeField] private PlayerMoveController _playerMoveController;
+        [SerializeField] private PlayerBallDropController _playerBallDropController;
         [SerializeField] private BallSpawner _ballSpawner;
         [SerializeField] private BallsMerger _ballsMerger;
 
@@ -16,6 +17,7 @@ namespace Core
         {
             Container.Bind<BallsDataPackContainer>().FromInstance(_ballsDataPackContainer).AsSingle().NonLazy();
             Container.Bind<PlayerMoveController>().FromInstance(_playerMoveController).AsSingle().NonLazy();
+            Container.Bind<PlayerBallDropController>().FromInstance(_playerBallDropController).AsSingle().NonLazy();
             Container.Bind<BallSpawner>().FromInstance(_ballSpawner).AsSingle().NonLazy();
             Container.Bind<BallsMerger>().FromInstance(_ballsMerger).AsSingle().NonLazy();
         }

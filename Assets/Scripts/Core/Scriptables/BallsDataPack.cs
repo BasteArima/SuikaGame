@@ -17,7 +17,7 @@ namespace Core.Scriptables
 
         public BallData GetNextLevelBall(float size)
         {
-            var currentBallData = _balls.ToList().Find(x => x.Size == size);
+            var currentBallData = _balls.ToList().Find(ballData => ballData.Size == size);
             var nextLevelBallIndex = _balls.IndexOf(currentBallData) + 1;
             return nextLevelBallIndex < _balls.Length ? _balls[nextLevelBallIndex] : null;
         }

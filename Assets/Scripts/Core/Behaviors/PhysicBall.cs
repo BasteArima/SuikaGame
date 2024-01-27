@@ -44,9 +44,9 @@ namespace Core.Behaviors
             transform.DOScale(ballData.Size, 0);
             Score = ballData.Score;
             _spriteRenderer.color = ballData.Color;
-            if (null != ballData.Sprite)
-                _spriteRenderer.sprite = ballData.Sprite;
+            _spriteRenderer.sprite = ballData?.Sprite;
             MergeSound = ballData.MergeSound;
+            _scoreText.gameObject.SetActive(null == ballData.Sprite);
         }
 
         private void OnCollisionWithOtherPhysicBall(Collision2D collision)

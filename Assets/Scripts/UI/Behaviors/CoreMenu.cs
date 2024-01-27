@@ -35,8 +35,7 @@ namespace UI.Behaviors
         private void OnNewNextBallGenerated(BallData nextBallData)
         {
             _nextBallTipIcon.color = nextBallData.Color;
-            if (null != nextBallData.Sprite)
-                _nextBallTipIcon.sprite = nextBallData.Sprite;
+            _nextBallTipIcon.sprite = nextBallData?.Sprite;
             
             var ballsDataPack = _ballsDataPackContainer.GetActivePack();
             var nextBallScore = ballsDataPack.Balls.IndexOf(nextBallData) * 2;
